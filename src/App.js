@@ -22,8 +22,24 @@ class BooksApp extends React.Component {
 
     componentDidMount() {
         BooksAPI.getAll()
-            .then(booksArr => this.setState({books: booksArr}))
+            .then(booksArr => {
+                const newArray = booksArr.map(book => {
+                    if (book.categories) {
+                        book.categories = book.categories.map(category => category.toLowerCase())
+                    }
 
+                    return book
+                });
+
+                this.setState({
+                    books: newArray
+                })
+            })
+
+    }
+
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        // console.log(this.state.books)
     }
 
     bookAction = (selectedBook, action) => {
@@ -40,7 +56,7 @@ class BooksApp extends React.Component {
     render() {
         return (
             <div className="app">
-                <Route path='/search' render={() => <SearchPage/>}/>
+                <Route path='/search' render={(props) => <SearchPage {...props} books={this.state.books} bookAction={this.bookAction}/>}/>
                 <Route exact path="/" render={() => <MainPage bookshelves={this.state.bookshelves}
                                                               books={this.state.books} bookAction={this.bookAction}/>}/>
             </div>
