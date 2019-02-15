@@ -3,7 +3,20 @@ import PropTypes from 'prop-types';
 
 export default class Book extends React.Component {
     static propTypes = {
-        bookObj: PropTypes.object.isRequired
+        bookObj: PropTypes.object.isRequired,
+        bookAction: PropTypes.func.isRequired
+    };
+
+    constructor(props) {
+        super(props);
+
+        this.selectBox = React.createRef();
+    }
+
+    selectBookAction = (event) => {
+        event.preventDefault();
+
+        this.props.bookAction(this.props.bookObj, event.target.value)
     };
 
     render() {
@@ -17,8 +30,9 @@ export default class Book extends React.Component {
                         backgroundImage: `url("${book.imageLinks.thumbnail}")`
                     }}/>
                     <div className="book-shelf-changer">
-                        <select>
+                        <select ref={this.selectBox} onChange={this.selectBookAction}>
                             <option value="move" disabled>Move to...</option>
+                            <option>-----</option>
                             <option value="currentlyReading">Currently Reading</option>
                             <option value="wantToRead">Want to Read</option>
                             <option value="read">Read</option>

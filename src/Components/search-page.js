@@ -1,4 +1,5 @@
-import React from 'react'
+import React from 'react';
+import {Link} from "react-router-dom";
 
 /*NOTES: The search from BooksAPI is limited to a particular set of search terms.
 You can find these search terms here:
@@ -12,8 +13,9 @@ export default class SearchPage extends React.Component {
         return (
             <div className="search-books">
                 <div className="search-books-bar">
-                    <button className="close-search" onClick={() => this.setState({showSearchPage: false})}>Close
-                    </button>
+                    <Link to="/">
+                        <button className="close-search">Close</button>
+                    </Link>
                     <div className="search-books-input-wrapper">
                         <input type="text" placeholder="Search by title or author"/>
                     </div>

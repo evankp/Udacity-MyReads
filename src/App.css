@@ -113,6 +113,10 @@ body, .app {
   outline: none;
 }
 
+button {
+  cursor: pointer;
+}
+
 button:active {
   border: red;
   outline: none;
