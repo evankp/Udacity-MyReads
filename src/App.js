@@ -5,22 +5,10 @@ import 'react-notifications/lib/notifications.css';
 import {Route} from "react-router-dom";
 import SearchPage from "./Components/search-page";
 import MainPage from "./Components/main-page";
-import {withRouter} from "react-router-dom";
-import PropTypes from 'prop-types'
 import {NotificationContainer, NotificationManager} from "react-notifications";
 
-class BooksApp extends React.Component {
-    static propTypes = {
-        location: PropTypes.object.isRequired,
-        match: PropTypes.object.isRequired,
-        history: PropTypes.object.isRequired
-    };
-
+export default class BooksApp extends React.Component {
     state = {
-        /*
-        * TODO: If I were designing the server backend as well, I would allow flexible bookshelfs, but currently
-        *   it would seem the backend is not setup for that.
-        * */
         bookshelves: [
             {name: 'Want to Read', id: 'wantToRead'},
             {name: 'Currently Reading', id: 'currentlyReading'},
@@ -89,5 +77,3 @@ class BooksApp extends React.Component {
         )
     }
 }
-
-export default withRouter(BooksApp)

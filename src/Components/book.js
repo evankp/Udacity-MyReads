@@ -9,36 +9,20 @@ export default class Book extends React.Component {
         options: PropTypes.array
     };
 
-    static defaultProps = {
-        options: [
-            {value: 'none', name: "Currently no options enabled", disabled: true},
-        ]
-    };
-
     state = {
         optionVal: "move"
     };
 
     selectBookAction = (event) => {
+        /*
+        * */
+        const {bookObj: book, createNotification} = this.props;
         event.preventDefault();
+
         this.setState({optionVal: event.target.value});
 
-        this.props.bookAction(this.props.bookObj, event.target.value);
-
-        switch (this.props.options[0].url) {
-            case '/search':
-                this.props.createNotification('success', 'Book added!');
-                break;
-
-            case '/':
-                this.props.createNotification('info', 'Book moved!');
-                break;
-
-            default:
-                break;
-        }
-
-        this.props.history.push('/')
+        this.props.bookAction(book, event.target.value);
+        createNotification('success', `"${book.title}" successfully moved!`)
     };
 
     render() {
@@ -54,7 +38,7 @@ export default class Book extends React.Component {
                     <div className="book-shelf-changer">
                         <select value={this.state.optionVal} onChange={this.selectBookAction}>
                             {options.map(option => <option key={option.value} value={option.value}
-                                                           disabled={option.disabled}>{option.name}</option>)}
+                                                           disabled={option.disabled} data-shelf={option.name}>{option.name}</option>)}
                         </select>
                     </div>
                 </div>

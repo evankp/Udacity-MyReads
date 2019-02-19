@@ -45,20 +45,29 @@ export default class SearchPage extends React.Component {
     };
 
     moveOptions = book => {
-        const {match: {url}} = this.props;
+        const {books, match: {url}} = this.props;
+        let matchingBook = {},
+            bookInLib = false;
 
         let optionsArray = [
             {value: 'move', name: "Add to...", disabled: true, url: url},
             {value: 'currentlyReading', name: 'Currently Reading'},
             {value: 'wantToRead', name: 'Want to Read'},
             {value: 'read', name: 'Read'},
+            {value: 'none', name: 'None'}
         ];
 
-        if (this.props.books.find(existingBook => existingBook.id === book.id)) {
-            optionsArray = [
-                {value: 'in-shelf', name: 'Book is already in your library!', disabled: true}
-            ]
-        }
+        books.forEach(existingBook => {
+            if (existingBook.id === book.id) {
+                matchingBook = existingBook;
+                bookInLib = true
+            }
+        });
+
+        optionsArray.forEach(option => {
+            if (option.value === matchingBook.shelf) option.disabled = true;
+            if (!bookInLib && option.value === 'none') option.disabled = true
+        });
 
         return optionsArray
     };
@@ -95,7 +104,7 @@ export default class SearchPage extends React.Component {
                             <li key={book.id}><Book {...this.props} bookObj={book} bookAction={bookAction}
                                                     options={this.moveOptions(book)}/>
                             </li>
-                            ))
+                        ))
                         }
                     </ol>
                 </div>
