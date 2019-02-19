@@ -6,7 +6,8 @@ import {Link} from "react-router-dom";
 export default class MainPage extends React.Component {
     static propTypes = {
         bookshelves: PropTypes.array.isRequired,
-        bookAction: PropTypes.func.isRequired
+        bookAction: PropTypes.func.isRequired,
+        books: PropTypes.array.isRequired
     };
 
     sortBooksByBookshelf = (array, shelf) => {
@@ -14,7 +15,7 @@ export default class MainPage extends React.Component {
     };
 
     render() {
-        const {bookshelves, books, bookAction} = this.props;
+        const {bookshelves, books} = this.props;
         return (
             <div className="list-books">
                 <div className="list-books-title">
@@ -23,8 +24,8 @@ export default class MainPage extends React.Component {
                 <div className="list-books-content">
                     {/* -- Map over bookshelves and filter the books to put on shelf by shelf id  -- */}
                     {bookshelves.map(bookshelf => (
-                        <BookShelf key={bookshelf.id} shelf={bookshelf} books={this.sortBooksByBookshelf(books, bookshelf)}
-                        bookAction={bookAction}/>
+                        <BookShelf {...this.props} key={bookshelf.id} shelf={bookshelf}
+                                   books={this.sortBooksByBookshelf(books, bookshelf)}/>
                     ))}
                 </div>
                 <div className="open-search">

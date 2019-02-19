@@ -2,6 +2,7 @@ import React from 'react';
 import {Link} from "react-router-dom";
 import PropTypes from 'prop-types';
 import Book from "./book";
+import * as BooksAPI from '../BooksAPI';
 
 /*NOTES: The search from BooksAPI is limited to a particular set of search terms.
 You can find these search terms here:
@@ -16,21 +17,55 @@ export default class SearchPage extends React.Component {
     };
 
     state = {
-        searchTerm: ""
+        searchTerm: '',
+        results: []
     };
 
-    filterBySearchTerm = (searchTerm) => {
-        return (searchTerm === "" ? [] : this.props.books.filter(book => {
-           return (book.authors.indexOf(searchTerm) !== -1 ||
-               (book.categories && book.categories.indexOf(searchTerm.toLowerCase()) !== -1) ||
-                   book.title.includes(searchTerm)
-           )
-        }))
+
+    handleSearchChange = event => {
+        this.setState({searchTerm: event.target.value});
+
+        if (event.target.value !== '') {
+            BooksAPI.search(event.target.value).then(res => this.setState({results: res}));
+        } else {
+            this.setState(() => ({results: []}))
+        }
+
+    };
+
+    resetSearchTerm = e => {
+        if (e) {
+            e.preventDefault();
+        }
+
+        this.setState({
+            searchTerm: '',
+            results: []
+        })
+    };
+
+    moveOptions = book => {
+        const {match: {url}} = this.props;
+
+        let optionsArray = [
+            {value: 'move', name: "Add to...", disabled: true, url: url},
+            {value: 'currentlyReading', name: 'Currently Reading'},
+            {value: 'wantToRead', name: 'Want to Read'},
+            {value: 'read', name: 'Read'},
+        ];
+
+        if (this.props.books.find(existingBook => existingBook.id === book.id)) {
+            optionsArray = [
+                {value: 'in-shelf', name: 'Book is already in your library!', disabled: true}
+            ]
+        }
+
+        return optionsArray
     };
 
     render() {
-        // let {url} = this.props.match,
-            let {bookAction} = this.props;
+        let {bookAction} = this.props,
+            {searchTerm} = this.state;
         return (
             <div className="search-books">
                 <div className="search-books-bar">
@@ -38,15 +73,30 @@ export default class SearchPage extends React.Component {
                         <button className="close-search">Close</button>
                     </Link>
                     <div className="search-books-input-wrapper">
-                        <input type="text" placeholder="Search by title or author" value={this.state.searchTerm}
-                               onChange={event => this.setState({searchTerm: event.target.value})}/>
+                        <input type="text" placeholder="Search by title or author" value={searchTerm}
+                               onChange={this.handleSearchChange}/>
                     </div>
                 </div>
                 <div className="search-books-results">
+                    {searchTerm !== "" && (
+                        <div className="search-books-term">
+                            <p>Search results for: <span>{searchTerm}</span></p>
+                            <button className="text-button" onClick={this.resetSearchTerm}>Reset</button>
+                        </div>
+                    )}
+
+                    {searchTerm === '' && (
+                        <div className="search-books-term">
+                            <p>No Results</p>
+                        </div>
+                    )}
                     <ol className="books-grid">
-                        {this.filterBySearchTerm(this.state.searchTerm).map(book => (
-                            <li key={book.id}><Book bookObj={book} bookAction={bookAction}/></li>
-                        ))}
+                        {!("error" in this.state.results || this.state.searchTerm === '') && this.state.results.map(book => (
+                            <li key={book.id}><Book {...this.props} bookObj={book} bookAction={bookAction}
+                                                    options={this.moveOptions(book)}/>
+                            </li>
+                            ))
+                        }
                     </ol>
                 </div>
             </div>

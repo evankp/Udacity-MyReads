@@ -9,8 +9,28 @@ export default class BookShelf extends React.Component {
         bookAction: PropTypes.func.isRequired
     };
 
+    bookshelfOptions = shelf => {
+        let optionsArray = [
+            {value: 'move', name: "Move to...", disabled: true, url: '/'},
+            {value: 'currentlyReading', name: "Currently Reading"},
+            {value: 'wantToRead', name: "Want to Read"},
+            {value: 'read', name: "Read"},
+            {value: 'none', name: "None"},
+        ];
+
+        optionsArray.forEach(option => {
+            // The move options is permanently disabled, as a label in the select menu
+            if (option.value === 'move') return;
+
+            // If the option is the current shelf, disable it; no point in moving to current shelf
+            option.value === shelf.id ? option.disabled = true : option.disabled = false
+        });
+
+        return optionsArray
+    };
+
     render() {
-        let {shelf: bookshelf, books, bookAction} = this.props;
+        let {shelf: bookshelf, books} = this.props;
         return (
             <div className="bookshelf">
                 <h2 className="bookshelf-title">{bookshelf.name}</h2>
@@ -18,7 +38,8 @@ export default class BookShelf extends React.Component {
                     <ol className="books-grid">
                         {/* -- Map each book to li tag -- */}
                         {books.length
-                            ? books.map(book => <li key={book.id}><Book bookObj={book} bookAction={bookAction}/></li>)
+                            ? books.map(book => <li key={book.id}><Book {...this.props} bookObj={book}
+                                                                        options={this.bookshelfOptions(bookshelf)}/></li>)
                             : <li>There are currently no books in this category</li>
                         }
 

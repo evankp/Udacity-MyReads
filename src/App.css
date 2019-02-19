@@ -115,6 +115,7 @@ body, .app {
 
 button {
   cursor: pointer;
+  background-color: #fff;
 }
 
 button:active {
@@ -124,6 +125,34 @@ button:active {
 
 .search-books-results {
   padding: 80px 10px 20px;
+}
+
+.search-books-term {
+  text-align: center;
+}
+
+.search-books-term p {
+  color: #dedede;
+  font-size: 1.5rem;
+}
+
+.search-books-term p span {
+  color: #000000;
+  font-size: 1.5rem;
+}
+
+.search-term-color {
+  color: deepskyblue;
+}
+
+.text-button {
+  background: none;
+  border: none;
+  color: firebrick;
+}
+
+.text-button:hover {
+  text-decoration: underline;
 }
 
 /* books grid */
