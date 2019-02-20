@@ -12,6 +12,9 @@ However, remember that the BooksAPI.search method DOES search by title or author
 you don't find a specific author or title. Every search is limited by search terms.*/
 
 export default class SearchPage extends React.Component {
+    /*
+    * books = The books array
+    * */
     static propTypes = {
         books: PropTypes.array.isRequired
     };
@@ -23,6 +26,7 @@ export default class SearchPage extends React.Component {
 
 
     handleSearchChange = event => {
+        // Update search term then search the backend for the book
         this.setState({searchTerm: event.target.value});
 
         if (event.target.value !== '') {
@@ -34,6 +38,7 @@ export default class SearchPage extends React.Component {
     };
 
     resetSearchTerm = e => {
+        // Reset the search term
         if (e) {
             e.preventDefault();
         }
@@ -45,12 +50,13 @@ export default class SearchPage extends React.Component {
     };
 
     moveOptions = book => {
-        const {books, match: {url}} = this.props;
+        // Options for search page and determining if the book is already on a shelf
+        const {books} = this.props;
         let matchingBook = {},
             bookInLib = false;
 
         let optionsArray = [
-            {value: 'move', name: "Add to...", disabled: true, url: url},
+            {value: 'move', name: "Add to...", disabled: true},
             {value: 'currentlyReading', name: 'Currently Reading'},
             {value: 'wantToRead', name: 'Want to Read'},
             {value: 'read', name: 'Read'},
@@ -100,6 +106,7 @@ export default class SearchPage extends React.Component {
                         </div>
                     )}
                     <ol className="books-grid">
+                        {/* If there is an error or no search term, do not show books. */}
                         {!("error" in this.state.results || this.state.searchTerm === '') && this.state.results.map(book => (
                             <li key={book.id}><Book {...this.props} bookObj={book} bookAction={bookAction}
                                                     options={this.moveOptions(book)}/>

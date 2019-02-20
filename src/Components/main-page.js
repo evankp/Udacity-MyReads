@@ -5,12 +5,18 @@ import {Link} from "react-router-dom";
 
 export default class MainPage extends React.Component {
     static propTypes = {
+        /*
+        * bookshelves = the bookshelf array
+        * bookAction = book move option callback
+        * books = all list of books regardless of shelf
+        * */
         bookshelves: PropTypes.array.isRequired,
         bookAction: PropTypes.func.isRequired,
         books: PropTypes.array.isRequired
     };
 
     sortBooksByBookshelf = (array, shelf) => {
+        // Limit each book for each shelf
         return array.filter(book => book.shelf === shelf.id)
     };
 

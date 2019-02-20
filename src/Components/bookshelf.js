@@ -3,6 +3,11 @@ import PropTypes from 'prop-types';
 import Book from "./book";
 
 export default class BookShelf extends React.Component {
+    /*
+    * shelf = The book shelf object
+    * books = THe array of books
+    * bookAction = the callback to move books between shelves
+    * */
     static propTypes = {
         shelf: PropTypes.object.isRequired,
         books: PropTypes.array.isRequired,
@@ -10,8 +15,9 @@ export default class BookShelf extends React.Component {
     };
 
     bookshelfOptions = shelf => {
+        // Create main page options for books
         let optionsArray = [
-            {value: 'move', name: "Move to...", disabled: true, url: '/'},
+            {value: 'move', name: "Move to...", disabled: true},
             {value: 'currentlyReading', name: "Currently Reading"},
             {value: 'wantToRead', name: "Want to Read"},
             {value: 'read', name: "Read"},
@@ -19,7 +25,7 @@ export default class BookShelf extends React.Component {
         ];
 
         optionsArray.forEach(option => {
-            // The move options is permanently disabled, as a label in the select menu
+            // The move options is permanently disabled, IE - a label in the select menu
             if (option.value === 'move') return;
 
             // If the option is the current shelf, disable it; no point in moving to current shelf

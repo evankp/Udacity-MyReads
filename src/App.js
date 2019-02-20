@@ -19,6 +19,7 @@ export default class BooksApp extends React.Component {
     };
 
     getBooks = () => {
+        // Get books from backend and then set the books state with the books
         BooksAPI.getAll()
             .then(booksArr => {
                 const newArray = booksArr.map(book => {
@@ -35,15 +36,18 @@ export default class BooksApp extends React.Component {
             })
     };
     componentDidMount() {
+        // First pass of book state update
         this.getBooks()
     }
 
     bookAction = (selectedBook, action) => {
+        // Update the shelf of book that is being moving and then re-fetch book list
         BooksAPI.update(selectedBook, action)
             .then(() => this.getBooks());
     };
 
     createNotification = (type, message) => {
+        // Show a notification of any kind
             switch (type) {
                 case 'success':
                     NotificationManager.success(message);
@@ -59,6 +63,7 @@ export default class BooksApp extends React.Component {
     };
 
     render() {
+        // Bundle the book related props that are shared between both routes, to make it easier to read route lines
         const bookProps = {
             books: this.state.books,
             bookAction: this.bookAction

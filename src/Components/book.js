@@ -4,9 +4,14 @@ const noCoverURL = '';
 
 export default class Book extends React.Component {
     static propTypes = {
+        /*
+        * BookObj = list of books
+        * bookAction = option callback in app.js
+        * options = dynamic options based on page -- if needed
+        * */
         bookObj: PropTypes.object.isRequired,
         bookAction: PropTypes.func.isRequired,
-        options: PropTypes.array
+        options: PropTypes.array.isRequired
     };
 
     state = {
@@ -15,6 +20,9 @@ export default class Book extends React.Component {
 
     selectBookAction = (event) => {
         /*
+        * 1. Set the option selection state (optionVal)
+        * 2. Call the bookAction function from App.js
+        * 3. Create a success notification to let the user know their action has worked
         * */
         const {bookObj: book, createNotification} = this.props;
         event.preventDefault();
@@ -33,10 +41,12 @@ export default class Book extends React.Component {
                     <div className="book-cover" style={{
                         width: 128,
                         height: 193,
+                        // IF no book cover just put a empty string, causing the gray cover image as a no-cover-image
                         backgroundImage: `url("${book.imageLinks ? book.imageLinks.thumbnail: noCoverURL}")`
                     }}/>
                     <div className="book-shelf-changer">
                         <select value={this.state.optionVal} onChange={this.selectBookAction}>
+                            {/* Map over the options passed down through props to create dynamic options */}
                             {options.map(option => <option key={option.value} value={option.value}
                                                            disabled={option.disabled} data-shelf={option.name}>{option.name}</option>)}
                         </select>
